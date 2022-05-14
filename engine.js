@@ -1,101 +1,92 @@
-const positions =[];
-const number = 25;
 
-const func = (x,y)=>{
-    let x_ =0;
-    let y_ =0;
-    x_ = x+1;
-    y_ = y+1;
-    return[x_,y_];
-}
-function fillPositions(width, height){
-    let x =-1 + width;
-    let y =-1 + height;
+const print = (WIDTH, HEIGHT, positions, CHAR)=>{
+    let result = [];
+    let resultI = 0;
 
-        for (let i = 0; i < number; i++) {
-            positions[i]= func(x,y);
-            x++;
-            y++;
-        }
-}
-
-fillPositions(10,25);
-console.log("filled");
-
-//////////////////////   END EXAMPLE 1  /////////////////////////////
-
-
-
-
-const print2 = (WIDTH, HEIGHT, positions, CHAR)=>{
-        let result = [];
-        let resultI = 0;
-    
-        // fill screen
-        for (let height = 0; height < HEIGHT; height++) {
-            for (let width = 0; width < WIDTH ; width++) {
-                result[resultI]= '-';
-                resultI ++;
-            }
-            result[resultI]= '\n';
+    // difining existence of screen
+    // print first a blank screen
+    // background char is CHAR
+    for (let height = 0; height < HEIGHT; height++) {
+        for (let width = 0; width < WIDTH ; width++) {
+            // SET RESULT ARRAY AS ALL BLANK CHAR
+            result[resultI]= CHAR;
             resultI ++;
         }
-    
-        // object to print
-        let left = 0 ;
-        let top = 0 ;
-        let size = 0;
-    
-        //put elements
-        positions.forEach(e => {
-            left = e[0];
-            top = e[1];
-            sizeX = e[2];
-            sizeY = e[3];
-            // begin of top left
-            let top_left = (top * WIDTH ) + left +1;
+        result[resultI]= '\n';
+        resultI ++;
+    }
 
-            const height = (relativePosition) =>{
-                for (let i = 0; i < sizeY * WIDTH; i+= WIDTH +1) {
-                    if(result[relativePosition + i] == '\n'){
-                        relativePosition += 1;
-                        break;
-                    }            
-                    result[relativePosition + i] = CHAR;
-                }
-            }
+    // elements
+    let left = 0 ;
+    let top = 0 ;
 
-            // print row per row
-            for (let i = 0; i < sizeX; i++) {
-                if(result[top_left + i] == '\n'){
-                    top_left += 1;
+    // init char for printing elements
+    let el_CHAR = ' ';
+
+    // put elements
+    positions.forEach(e => {
+        left = e[0] +1;
+        top = e[1];
+        sizeX = e[2];
+        sizeY = e[3];
+        el_CHAR = e[4];
+
+        // begin of top left
+        let top_left = (top * WIDTH ) + left ;
+
+        // funtction to skip rows based on '\n'
+        const height = (relativePosition) =>{
+            for (let i = 0; i < sizeY * WIDTH; i+= WIDTH +1) {
+                if(result[relativePosition + i] == '\n'){
+                    relativePosition += 1;
                     break;
                 }            
-                result[top_left + i] = CHAR;
-                // print 1 column
-                height(top_left + i);
+                result[relativePosition + i] = el_CHAR;
             }
-        });
-        return result;
-    }
-    
+        }
+
+        // print x row per row
+        for (let i = 0; i < sizeX; i++) {
+            // check if border of right side
+            if(result[top_left + i] == '\n'){
+                top_left += 1;
+                break;
+            }
+            // set in array new position
+            result[top_left + i] = el_CHAR;
+            
+            // ...() same...
+            // print 1 column
+            height(top_left + i);
+        }
+    });
+    return result;
+}
+
+//  CREATES AN  " M "
+function createChar(x,y){
+    let arr =  [];
+    const CHAR = 'M'
+    // fll spot
+    arr.push([x,y,2,5,CHAR]);
+    arr.push([x+2,y,2,1,CHAR]);
+    arr.push([x+4,y+1,2,1,CHAR]);
+    arr.push([x+6,y+2,2,1,CHAR]);
+    arr.push([x+7,y+1,2,1,CHAR]);
+    arr.push([x+7,y,2,1,CHAR]);
+    arr.push([x+9,y,2,5,CHAR]);
+    return arr;
+}
+
+const HEIGHT = 33;
+const WIDTH = 128;
+
+const positions = [];
+positions.push( ...createChar(20 , 15) );
 
 
+const EMPTY_SPACE = ' ';
+let result=[];
+result = print(WIDTH,HEIGHT,positions,EMPTY_SPACE);
 
-
-
-
-
-
-
-const positions2 = [[23,9,5,3],[0,0,0,0],[0,0,0,0]];
-let result2 =[];
-
-
-result2 = print2(WIDTH,HEIGHT,positions2,'#');
-
-const HEIGHT = 20;
-const WIDTH = 60;
-
-
-console.log(result2.join(""));
+console.log(result.join(""));
