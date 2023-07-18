@@ -1,3 +1,6 @@
+//                                    "  
+// WIDTH & HEIGHT are the size of the     screen 
+//                                                 "
 
 const print = (WIDTH, HEIGHT, positions, CHAR)=>{
     let result = [];
